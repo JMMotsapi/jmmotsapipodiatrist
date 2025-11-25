@@ -1,13 +1,14 @@
 :root{
-  --bg:#f7f9fb;
-  --card:#ffffff;
-  --accent:#2b7a78;
-  --accent-2:#5cc8c3;
-  --text:#0f1720;
-  --muted:#6b7280;
-  --radius:10px;
-  --max-width:1100px;
-  --gap:1.25rem;
+  --bg: #f6fbf6; /* neutral light background */
+  --card: #ffffff;
+  --accent: #39b54a; /* logo green */
+  --accent-2: #bfe9a0; /* softer light green for alternative CTAs */
+  --accent-600: #2f8a3b; /* darker logo shade for hover */
+  --text: #0f1720;
+  --muted: #6b7280;
+  --radius: 12px;
+  --max-width: 1100px;
+  --gap: 1.25rem;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
@@ -24,25 +25,57 @@ body{
 .container{max-width:var(--max-width);margin:0 auto;padding:1.5rem}
 
 .site-header{background:linear-gradient(90deg, #ffffff, #f8fafc);border-bottom:1px solid #e6eef0}
-.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.header-inner{display:flex;align-items:center;justify-content:space-between}
 .logo{font-weight:700;color:var(--accent);text-decoration:none;display:flex;align-items:center;padding:.5rem 0}
-.logo-img{height:60px;max-width:200px;width:auto;object-fit:contain;display:block}
+.logo-img{
+  height:60px;
+  width:auto;
+  max-width:180px;
+  object-fit:contain;
+  display:block;
+  margin:0;
+}
+/* Hamburger button (hidden on wider screens) */
+.hamburger{display:none;background:none;border:0;padding:.25rem;cursor:pointer}
+.hamburger-box{width:26px;height:18px;display:inline-block;position:relative}
+.hamburger-inner, .hamburger-inner::before, .hamburger-inner::after{background:var(--text);width:26px;height:2px;border-radius:2px;display:block;position:absolute;left:0;transition:transform .25s ease,opacity .2s ease}
+.hamburger-inner{top:50%;transform:translateY(-50%)}
+.hamburger-inner::before{content:'';top:-8px}
+.hamburger-inner::after{content:'';top:8px}
+.hamburger[aria-expanded="true"] .hamburger-inner{background:transparent}
+.hamburger[aria-expanded="true"] .hamburger-inner::before{transform:translateY(8px) rotate(45deg)}
+.hamburger[aria-expanded="true"] .hamburger-inner::after{transform:translateY(-8px) rotate(-45deg)}
 .main-nav a{margin-left:1rem;color:var(--text);text-decoration:none}
 .main-nav a.cta{background:var(--accent);color:#fff;padding:.5rem .75rem;border-radius:6px}
 
-.hero{padding:3rem 0;background:linear-gradient(180deg,#e6fbfa 0%, #ffffff 60%)}
+.hero{padding:3rem 0;background:linear-gradient(180deg,#e6ecfb 0%, #ffffff 60%)}
 .hero-inner{display:flex;gap:2rem;align-items:center}
 .hero-copy h1{margin:0 0 .5rem;font-size:2rem}
 .hero-copy p{margin:0 0 1rem;color:var(--muted)}
 .hero-image{font-size:4rem}
-.btn-primary, .btn-primary:visited{display:inline-block;background:var(--accent);color:#fff;padding:.6rem 1rem;border-radius:8px;text-decoration:none}
+
+.btn-primary, .btn-primary:visited{
+  display:inline-block;
+  background: linear-gradient(180deg,var(--accent), var(--accent-600));
+  color:#fff;
+  padding:.65rem 1.05rem;
+  border-radius:10px;
+  text-decoration:none;
+  box-shadow: 0 8px 20px rgba(57,181,74,0.12);
+  border: 0;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(57,181,74,0.16)}
+.btn-primary:focus{outline:3px solid rgba(57,181,74,0.12);outline-offset:3px}
+
+/* special accent for alternative CTAs */
+.cta-alt{background: linear-gradient(180deg,var(--accent-2), var(--accent)); color: #222}
 
 .services{padding:2rem 0}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
-.card{background:var(--card);padding:1rem;border-radius:var(--radius);box-shadow:0 6px 18px rgba(17,24,39,0.06)}
+.card{background:var(--card);padding:1rem;border-radius:var(--radius);box-shadow:0 8px 20px rgba(57,181,74,0.08);border-left:4px solid rgba(57,181,74,0.10)}
 
 .about,.testimonials{padding:1.5rem 0}
-.testimonials blockquote{margin:0;padding:.75rem 1rem;background:#fff;border-left:4px solid var(--accent);border-radius:8px}
+.testimonials blockquote{margin:0;padding:.75rem 1rem;background:#fff;border-left:6px solid var(--accent);border-radius:8px}
 
 .contact .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
 .contact label{font-size:.85rem;color:var(--muted)}
@@ -54,12 +87,59 @@ body{
 .footer-inner{display:flex;justify-content:space-between;align-items:center}
 .footer-nav a{margin-left:.75rem;color:var(--muted);text-decoration:none}
 
+/* Links hover to accent */
+a:hover{color:var(--accent)}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal, .hero-image{transition:none!important;animation:none!important}
+}
+
 @media (max-width:800px){
   .hero-inner{flex-direction:column;text-align:center}
   .grid{grid-template-columns:1fr}
   .contact .form-grid{grid-template-columns:1fr}
   .header-inner{padding:.5rem 0}
   .main-nav a{margin-left:.5rem}
+}
+
+/* Mobile / small screens: improve layout and touch targets */
+@media (max-width:600px){
+  /* Keep header on a single row: logo left, hamburger right */
+  .header-inner{display:flex;flex-direction:row;align-items:center;justify-content:space-between;padding:.5rem 1rem}
+  .logo{padding:0}
+  .logo-img{max-width:140px;height:auto}
+
+  /* Stack navigation links and make them easier to tap */
+  .hamburger{display:flex}
+  .main-nav{display:none;flex-direction:column;align-items:center;gap:.5rem}
+  .main-nav.open{display:flex}
+  .main-nav a{display:inline-block;width:100%;max-width:320px;padding:.7rem 1rem;margin:0;color:var(--text);border-radius:8px;text-align:center}
+  .main-nav a.cta{background:var(--accent);color:#fff}
+
+  /* Make primary CTAs full-width and larger on small screens */
+  .btn-primary, .btn-primary:visited{display:inline-block;width:100%;max-width:360px;padding:.85rem 1rem;border-radius:10px}
+
+  /* Slightly larger readable hero text on small devices but keep line-length comfortable */
+  .hero-copy h1{font-size:1.6rem}
+  .hero-copy p{font-size:0.96rem}
+
+  /* Cards and testimonials spacing */
+  .card{padding:1rem}
+  .testimonials blockquote{padding:1rem}
+
+  /* Footer stacked */
+  .footer-inner{flex-direction:column;align-items:center;gap:.5rem}
+}
+
+/* WhatsApp floating action button */
+.whatsapp-fab{position:fixed;right:16px;bottom:16px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#25D366;color:#fff;text-decoration:none;box-shadow:0 10px 24px rgba(37,211,102,0.18);z-index:1200}
+.whatsapp-fab svg{width:44px;height:44px;border-radius:50%}
+.whatsapp-fab:focus{outline:3px solid rgba(57,181,74,0.16);outline-offset:3px}
+.whatsapp-fab:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(37,211,102,0.22)}
+
+@media (min-width:900px){
+  /* hide on very large screens if you prefer desktop not to show FAB — keep visible by removing this media rule */
+  .whatsapp-fab{display:block}
 }
 
 /* Reveal animations */

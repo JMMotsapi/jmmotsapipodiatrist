@@ -96,4 +96,92 @@ document.addEventListener('DOMContentLoaded', function(){
       els.forEach(el=>{el.classList.add('active'); if(el.classList.contains('hero-image')) el.classList.add('float')});
     }
   })();
+
+  // Sample the header logo image and set CSS accent variables to match
+  (function(){
+    const img = document.querySelector('.logo-img');
+    if(!img) return;
+
+    // Wait for image to load
+    function applySampledColors(rgb){
+      const [r,g,b] = rgb;
+      const toHex = (n) => n.toString(16).padStart(2,'0');
+      const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+
+      // Derive darker shade
+      const darker = (v, amt=0.86) => Math.max(0, Math.min(255, Math.round(v*amt)));
+      const r2 = darker(r), g2 = darker(g), b2 = darker(b);
+      const hexDark = `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
+
+      // Derive warm accent by shifting toward orange
+      const warm = (v, amt=1.08) => Math.max(0, Math.min(255, Math.round(v*amt)));
+      const r3 = Math.min(255, warm(r,1.12));
+      const g3 = Math.max(0, Math.round(g*0.78));
+      const b3 = Math.max(0, Math.round(b*0.5));
+      const hexWarm = `#${toHex(r3)}${toHex(g3)}${toHex(b3)}`;
+
+      document.documentElement.style.setProperty('--accent', hex);
+      document.documentElement.style.setProperty('--accent-600', hexDark);
+      document.documentElement.style.setProperty('--accent-2', hexWarm);
+    }
+
+    function sampleImage(image){
+      try{
+        const canvas = document.createElement('canvas');
+        const w = 40, h = 40;
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, w, h);
+        const data = ctx.getImageData(0,0,w,h).data;
+        let r=0,g=0,b=0,count=0;
+        for(let i=0;i<data.length;i+=4){
+          const alpha = data[i+3];
+          if(alpha<64) continue; // ignore transparent
+          r += data[i]; g += data[i+1]; b += data[i+2]; count++;
+        }
+        if(count===0) return null;
+        r = Math.round(r/count); g = Math.round(g/count); b = Math.round(b/count);
+        return [r,g,b];
+      }catch(e){
+        return null;
+      }
+    }
+
+    if(img.complete && img.naturalWidth){
+      const rgb = sampleImage(img);
+      if(rgb) applySampledColors(rgb);
+    } else {
+      img.addEventListener('load', function(){
+        const rgb = sampleImage(img);
+        if(rgb) applySampledColors(rgb);
+      });
+    }
+  })();
+
+    // Mobile hamburger toggle
+    (function(){
+      const hamburger = document.querySelector('.hamburger');
+      const mainNav = document.getElementById('mainNav');
+      if(!hamburger || !mainNav) return;
+
+      hamburger.addEventListener('click', function(e){
+        const expanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', String(!expanded));
+        mainNav.classList.toggle('open');
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', function(e){
+        if(mainNav.classList.contains('open') && !mainNav.contains(e.target) && !hamburger.contains(e.target)){
+          mainNav.classList.remove('open');
+          hamburger.setAttribute('aria-expanded','false');
+        }
+      });
+
+      // Close on nav link click (helpful on mobile)
+      Array.from(mainNav.querySelectorAll('a')).forEach(a=>a.addEventListener('click', ()=>{
+        mainNav.classList.remove('open');
+        hamburger.setAttribute('aria-expanded','false');
+      }));
+    })();
 });
