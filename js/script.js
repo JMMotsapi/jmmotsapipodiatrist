@@ -102,30 +102,46 @@ document.addEventListener('DOMContentLoaded', function(){
     const img = document.querySelector('.logo-img');
     if(!img) return;
 
-    // Wait for image to load
-    function applySampledColors(rgb){
+    // Only attempt canvas sampling when the image is same-origin to avoid CORS/tainting issues
+    try{
+      const imgUrl = new URL(img.getAttribute('src'), location.href);
+      if(imgUrl.origin !== location.origin){
+        console.warn('Logo image is not same-origin; skipping color sampling to avoid canvas tainting.', imgUrl.origin);
+        return; // don't attempt sampling across origins
+      }
+    }catch(e){
+      // If URL parsing fails, skip sampling to be safe
+      console.warn('Failed to parse logo URL — skipping sampling.', e);
+      return;
+    }
+
+    function toHex(n){ return n.toString(16).padStart(2,'0'); }
+
+    function applySampledColors(rgb, bgRgb){
       const [r,g,b] = rgb;
-      const toHex = (n) => n.toString(16).padStart(2,'0');
       const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 
-      // Derive darker shade
+      // darker shade
       const darker = (v, amt=0.86) => Math.max(0, Math.min(255, Math.round(v*amt)));
-      const r2 = darker(r), g2 = darker(g), b2 = darker(b);
-      const hexDark = `#${toHex(r2)}${toHex(g2)}${toHex(b2)}`;
+      const hexDark = `#${toHex(darker(r))}${toHex(darker(g))}${toHex(darker(b))}`;
 
-      // Derive warm accent by shifting toward orange
-      const warm = (v, amt=1.08) => Math.max(0, Math.min(255, Math.round(v*amt)));
-      const r3 = Math.min(255, warm(r,1.12));
-      const g3 = Math.max(0, Math.round(g*0.78));
-      const b3 = Math.max(0, Math.round(b*0.5));
-      const hexWarm = `#${toHex(r3)}${toHex(g3)}${toHex(b3)}`;
+      // light complementary tint
+      const tint = (v, amt=1.12) => Math.max(0, Math.min(255, Math.round(v*amt)));
+      const hexTint = `#${toHex(tint(r))}${toHex(Math.round(g*0.92))}${toHex(Math.round(b*0.9))}`;
 
       document.documentElement.style.setProperty('--accent', hex);
       document.documentElement.style.setProperty('--accent-600', hexDark);
-      document.documentElement.style.setProperty('--accent-2', hexWarm);
+      document.documentElement.style.setProperty('--accent-2', hexTint);
+
+      // If we were able to sample a background color, set header bg
+      if(Array.isArray(bgRgb)){
+        const [br,bg,bb] = bgRgb;
+        const hexBg = `#${toHex(br)}${toHex(bg)}${toHex(bb)}`;
+        document.documentElement.style.setProperty('--header-bg', hexBg);
+      }
     }
 
-    function sampleImage(image){
+    function sampleImageAverage(image){
       try{
         const canvas = document.createElement('canvas');
         const w = 40, h = 40;
@@ -136,26 +152,60 @@ document.addEventListener('DOMContentLoaded', function(){
         let r=0,g=0,b=0,count=0;
         for(let i=0;i<data.length;i+=4){
           const alpha = data[i+3];
-          if(alpha<64) continue; // ignore transparent
+          if(alpha<64) continue;
           r += data[i]; g += data[i+1]; b += data[i+2]; count++;
         }
         if(count===0) return null;
-        r = Math.round(r/count); g = Math.round(g/count); b = Math.round(b/count);
-        return [r,g,b];
-      }catch(e){
+        return [Math.round(r/count), Math.round(g/count), Math.round(b/count)];
+      }catch(e){ return null; }
+    }
+
+    // Try to sample a likely background pixel (top-left area) to capture the gray box
+    function sampleBackgroundPixel(image){
+      try{
+        const canvas = document.createElement('canvas');
+        const w = 80, h = 40; // wider to capture header-area background
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image, 0, 0, w, h);
+        const imgData = ctx.getImageData(0,0,w,h).data;
+        // scan rows near top and around center for a non-transparent pixel
+        for(let y=2;y<10;y++){
+          for(let x=2;x<w-2;x+=4){
+            const idx = (y*w + x)*4;
+            const a = imgData[idx+3];
+            if(a>200){
+              const r = imgData[idx], g = imgData[idx+1], b = imgData[idx+2];
+              // ignore pure white or pure black
+              if(!(r>250 && g>250 && b>250) && !(r<10 && g<10 && b<10)) return [r,g,b];
+            }
+          }
+        }
+        // fallback: sample center-left area
+        for(let y=Math.floor(h/4); y<Math.floor(h/2); y++){
+          for(let x=2;x<10;x++){
+            const idx = (y*w + x)*4;
+            const a = imgData[idx+3];
+            if(a>200){ const r=imgData[idx], g=imgData[idx+1], b=imgData[idx+2]; return [r,g,b]; }
+          }
+        }
         return null;
+      }catch(e){ return null; }
+    }
+
+    function handleImage(image){
+      const avg = sampleImageAverage(image);
+      const bg = sampleBackgroundPixel(image) || avg;
+      // Only apply sampled colors when we have a valid average
+      if(Array.isArray(avg) && avg.length === 3){
+        applySampledColors(avg, bg);
+      } else {
+        console.info('Logo sampling returned no usable average color; keeping default theme variables.');
       }
     }
 
-    if(img.complete && img.naturalWidth){
-      const rgb = sampleImage(img);
-      if(rgb) applySampledColors(rgb);
-    } else {
-      img.addEventListener('load', function(){
-        const rgb = sampleImage(img);
-        if(rgb) applySampledColors(rgb);
-      });
-    }
+    if(img.complete && img.naturalWidth){ handleImage(img); }
+    else img.addEventListener('load', function(){ handleImage(img); });
   })();
 
     // Mobile hamburger toggle

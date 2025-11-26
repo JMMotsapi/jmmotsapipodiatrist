@@ -31,7 +31,7 @@
     "@type": "MedicalClinic",
     "name": "JM Motsapi Podiatry",
     "description": "Professional podiatry care for patients of all ages, offering treatment for foot pain, sports injuries, diabetic footcare, and custom orthotics.",
-    "telephone": "+1-555-123-4567",
+    "telephone": "+27679557952",
     "url": "/"
   }
   </script>
@@ -39,10 +39,15 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="logo" href="#"><img src="img/logo1.png" alt="JM Motsapi Podiatry" class="logo-img" /></a>
-      <button class="hamburger" aria-label="Toggle navigation" aria-controls="mainNav" aria-expanded="false">
-        <span class="hamburger-box"><span class="hamburger-inner"></span></span>
-      </button>
+      <div class="header-top">
+        <a class="logo" href="#" aria-label="JM Motsapi Podiatry"><img src="img/logo new.png" alt="JM Motsapi Podiatry" class="logo-img" /></a>
+        <div class="header-actions">
+          <button class="hamburger" aria-label="Toggle navigation" aria-controls="mainNav" aria-expanded="false">
+            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+          </button>
+        </div>
+      </div>
+
       <nav id="mainNav" class="main-nav" aria-label="Main navigation">
         <a href="#services">Services</a>
         <a href="#about">About</a>
@@ -61,34 +66,65 @@
           <p><a href="#contact" class="btn-primary">Book a Consultation</a></p>
         </div>
         <div class="hero-image" aria-hidden="true">👣</div>
+
+        <!-- Decorative geometric shapes (purely visual) -->
+        <div class="hero-decor" aria-hidden="true">
+          <svg class="shapes-svg" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" role="img" focusable="false" aria-hidden="true">
+            <!-- soft large circle -->
+            <circle class="shape shape-1" cx="220" cy="120" r="160" />
+            <!-- rotated square -->
+            <rect class="shape shape-2" x="760" y="40" width="180" height="180" rx="18" transform="rotate(20 850 130)" />
+            <!-- small accent circles cluster -->
+            <g class="cluster">
+              <circle class="shape shape-3" cx="980" cy="420" r="36" />
+              <circle class="shape shape-4" cx="1030" cy="360" r="22" />
+              <rect class="shape shape-5" x="880" y="320" width="42" height="42" rx="8" transform="rotate(-18 901 341)" />
+            </g>
+            <!-- thin line element -->
+            <rect class="shape shape-6" x="120" y="380" width="420" height="12" rx="6" />
+          </svg>
+        </div>
       </div>
     </section>
 
     <section id="services" class="container services">
-      <h2>Our Services</h2>
+      <h2>Services include</h2>
       <div class="grid">
         <article class="card">
-          <h3>General Podiatry</h3>
-          <p>Assessment and treatment for common foot problems: corns, calluses, ingrown nails.</p>
+          <h3>Foot examinations and assessments</h3>
+          <p>Comprehensive foot checks to diagnose concerns, assess gait and structure, and plan appropriate care.</p>
         </article>
+
         <article class="card">
-          <h3>Sports Injuries</h3>
-          <p>Diagnosis and rehab plans to get athletes back to their sport quickly and safely.</p>
+          <h3>Treatment of foot and ankle injuries</h3>
+          <p>Acute and ongoing management for sprains, strains, fractures, tendon injuries and other trauma.</p>
         </article>
+
         <article class="card">
-          <h3>Diabetic Footcare</h3>
-          <p>Comprehensive screening and preventative care to reduce risk and maintain mobility.</p>
+          <h3>Management of complications associated with chronic conditions</h3>
+          <p>Care for diabetes- and arthritis-related foot problems, ulcer prevention, and complication management.</p>
         </article>
+
         <article class="card">
-          <h3>Custom Orthotics</h3>
-          <p>Prescription orthotics designed to correct biomechanics and relieve pain.</p>
+          <h3>Custom orthotics and footwear advice</h3>
+          <p>Assessment and prescription of orthotics plus guidance on supportive footwear to improve comfort and function.</p>
+        </article>
+
+        <article class="card">
+          <h3>Sports podiatry and biomechanical assessments</h3>
+          <p>Performance-focused evaluation and interventions to prevent injury and optimise biomechanics for athletes.</p>
+        </article>
+
+        <article class="card">
+          <h3>Nail care and minor surgical procedures</h3>
+          <p>Professional nail treatments, ingrown nail procedures and minor in-clinic procedures delivered with sterile technique.</p>
         </article>
       </div>
     </section>
 
     <section id="about" class="container about">
       <h2>About JM Motsapi Clinic</h2>
-      <p>JM Motsapi combines evidence-based treatment with personalised care. Our podiatrists are registered and experienced in treating a wide range of foot and ankle conditions.</p>
+      <p>JM Motsapi Podiatrist is a foot, ankle and lower limb care specialist (Ngaka ya Maoto) providing diagnosis, treatment, and management of various foot-related conditions.</p>
     </section>
 
     <section id="testimonials" class="container testimonials">
@@ -97,8 +133,8 @@
     </section>
 
     <section id="contact" class="container contact">
-      <h2>Contact & Bookings</h2>
-      <p>Call us at <strong>+27 123-4567</strong> or complete the form below and we'll be in touch.</p>
+      <h2>Bookings</h2>
+      <p>complete the form below and we'll be in touch.</p>
 
       <form id="contactForm" novalidate>
         <div class="form-grid">
@@ -125,7 +161,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <small>&copy; <span id="year"></span> JM MOTSAPI Podiary Clinic. All rights reserved.</small>
+      <small>&copy; <span id="year"></span> JM MOTSAPI Podiary. All rights reserved.</small>
       <nav class="footer-nav" aria-label="Footer">
         <a href="#privacy">Privacy</a>
         <a href="#terms">Terms</a>
@@ -134,7 +170,7 @@
   </footer>
 
   <!-- Floating WhatsApp contact button -->
-  <a class="whatsapp-fab" href="https://wa.me/27731026014?text=Hello%20JM%20Motsapi%20Podiatry" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+  <a class="whatsapp-fab" href="https://wa.me/27679557952?text=Hello%20JM%20Motsapi%20Podiatry" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
     <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="12" fill="#25D366"/><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.149-.672.15-.198.297-.768.967-.94 1.166-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.058-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.149-.173.198-.298.298-.497.099-.198.05-.372-.025-.52-.075-.149-.672-1.612-.921-2.207-.242-.579-.487-.5-.672-.51l-.573-.01c-.198 0-.52.074-.793.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487 0 0 .337.148.607.074.271-.074 1.758-.719 2.006-1.415.248-.695.248-1.29.173-1.415-.074-.124-.273-.198-.57-.347z" fill="#fff"/></svg>
   </a>
 
