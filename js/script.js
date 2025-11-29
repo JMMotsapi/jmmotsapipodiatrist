@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
       // Prepare payload for FormSubmit
       const payload = { name, email, phone, message };
-      const ajaxEndpoint = 'https://formsubmit.co/ajax/letsieteboho7@gmail.com';
-      const postEndpoint = 'https://formsubmit.co/letsieteboho7@gmail.com';
+      const ajaxEndpoint = 'https://formsubmit.co/ajax/martinusmotsapi@gmail.com';
+      const postEndpoint = 'https://formsubmit.co/martinusmotsapi@gmail.com';
 
       // Try AJAX first (nicer UX) and fall back to a standard form POST when needed
       try{
