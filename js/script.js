@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const feedback = document.getElementById('formFeedback');
 
   if(form){
-    form.addEventListener('submit', function(e){
+    form.addEventListener('submit', async function(e){
       e.preventDefault();
       feedback.textContent = '';
       const name = form.name.value.trim();
@@ -27,21 +27,75 @@ document.addEventListener('DOMContentLoaded', function(){
         return;
       }
 
-      // Build a mailto: URL to open the user's email client with a prefilled message
-      const to = 'martinusmotsapi@gmail.com';
-      const subject = `Booking request from ${name}`;
-      const bodyLines = [];
-      bodyLines.push(`Name: ${name}`);
-      bodyLines.push(`Email: ${email}`);
-      if(phone) bodyLines.push(`Phone: ${phone}`);
-      bodyLines.push('');
-      bodyLines.push(message);
-      const body = encodeURIComponent(bodyLines.join('\n'));
-      const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${body}`;
+      // Prepare payload for FormSubmit
+      const payload = { name, email, phone, message };
+      const ajaxEndpoint = 'https://formsubmit.co/ajax/letsieteboho7@gmail.com';
+      const postEndpoint = 'https://formsubmit.co/letsieteboho7@gmail.com';
 
-      feedback.textContent = 'Opening your email app...';
-      // Open the user's default mail client
-      window.location.href = mailto;
+      // Try AJAX first (nicer UX) and fall back to a standard form POST when needed
+      try{
+        feedback.textContent = 'Sending message...';
+        const formData = new FormData();
+        Object.keys(payload).forEach(k => formData.append(k, payload[k] || ''));
+
+        const resp = await fetch(ajaxEndpoint, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        // Attempt to parse JSON response
+        let json = null;
+        try{ json = await resp.json(); }catch(e){ json = null; }
+
+        // FormSubmit may return { success: 'false', message: '...'} when AJAX is blocked (file:// or CORS)
+        const ajaxOkay = resp.ok && json && String(json.success) !== 'false';
+
+        if(ajaxOkay){
+          feedback.textContent = 'Message sent — thank you!';
+          form.reset();
+        } else {
+          // Fallback: create and submit a hidden form POST to FormSubmit (reliable on GitHub Pages)
+          feedback.textContent = 'Completing submission...';
+          const fallback = document.createElement('form');
+          fallback.method = 'POST';
+          fallback.action = postEndpoint;
+          fallback.style.display = 'none';
+          Object.keys(payload).forEach(k => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = k;
+            input.value = payload[k] || '';
+            fallback.appendChild(input);
+          });
+          // Include a subject field so FormSubmit email is easier to read
+          const subj = document.createElement('input');
+          subj.type = 'hidden'; subj.name = '_subject'; subj.value = `Booking request from ${name}`;
+          fallback.appendChild(subj);
+
+          document.body.appendChild(fallback);
+          fallback.submit();
+        }
+      }catch(err){
+        // If fetch fails (network/CORS), fallback to non-AJAX POST
+        feedback.textContent = 'Submitting...';
+        const fallback = document.createElement('form');
+        fallback.method = 'POST';
+        fallback.action = postEndpoint;
+        fallback.style.display = 'none';
+        Object.keys(payload).forEach(k => {
+          const input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = k;
+          input.value = payload[k] || '';
+          fallback.appendChild(input);
+        });
+        const subj = document.createElement('input');
+        subj.type = 'hidden'; subj.name = '_subject'; subj.value = `Booking request from ${name}`;
+        fallback.appendChild(subj);
+        document.body.appendChild(fallback);
+        fallback.submit();
+      }
     });
   }
 
