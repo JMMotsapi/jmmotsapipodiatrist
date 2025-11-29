@@ -196,8 +196,15 @@ document.addEventListener('DOMContentLoaded', function(){
     function handleImage(image){
       const avg = sampleImageAverage(image);
       const bg = sampleBackgroundPixel(image) || avg;
-      // Only apply sampled colors when we have a valid average
+      // Only apply sampled colors when we have a valid average and it's not low-chroma (gray)
       if(Array.isArray(avg) && avg.length === 3){
+        const [r,g,b] = avg;
+        const chroma = Math.max(r,g,b) - Math.min(r,g,b);
+        // If chroma is very low the sampled color is near-gray; ignore it to preserve theme
+        if(chroma < 18){
+          console.info('Sampled logo color is low-chroma (near-gray); skipping sampled theme to preserve brand colors.');
+          return;
+        }
         applySampledColors(avg, bg);
       } else {
         console.info('Logo sampling returned no usable average color; keeping default theme variables.');

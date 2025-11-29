@@ -61,7 +61,8 @@ body{
 
 .btn-primary, .btn-primary:visited{
   display:inline-block;
-  background: linear-gradient(180deg,var(--accent), var(--accent-600)) !important;
+    /* Use CSS variable fallbacks so buttons keep green even if JS or environment clears variables */
+    background: linear-gradient(180deg, var(--accent, #39b54a), var(--accent-600, #2f8a3b));
   color:#fff;
   padding:.65rem 1.05rem;
   border-radius:10px;
