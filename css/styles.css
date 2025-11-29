@@ -1,15 +1,26 @@
 :root{
-  --bg: #ffffff; /* page background: white */
-  --header-bg: #f5f5f5; /* subtle gray to match logo background */
+  /* Core surfaces */
+  --bg: #ffffff;
+  --surface: #fbfdfb;
+  --header-bg: #f7faf6;
   --card: #ffffff;
+
+  /* Primary (logo) — keep exact logo green as primary */
   --accent: #39b54a; /* logo green */
-  --accent-2: #bfe9a0; /* softer light green for alternative CTAs */
-  --accent-600: #2f8a3b; /* darker logo shade for hover */
+  --accent-600: #2f8a3b; /* darker */
+  --accent-2: #def7dd; /* light tint */
+
+  /* Complementary (color-wheel opposite) — provides contrast and visual interest */
+  --accent-comp: #c64ab5; /* complementary purple */
+  --accent-comp-2: #f2dff4;
+  --accent-comp-600: #a03698;
+
   --text: #0f1720;
   --muted: #6b7280;
   --radius: 12px;
   --max-width: 1100px;
   --gap: 1.25rem;
+  --focus: rgba(16,24,32,0.06);
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
 }
 
@@ -50,7 +61,7 @@ body{
 .hamburger[aria-expanded="true"] .hamburger-inner::after{transform:translateY(-8px) rotate(-45deg)}
 .main-nav{display:flex;gap:1.5rem;align-items:center;justify-content:center;width:100%;flex-wrap:wrap;padding-top:.5rem}
 .main-nav a{color:var(--text);text-decoration:none;padding:.5rem .75rem;border-radius:6px;font-weight:600;letter-spacing:0.01em}
-.main-nav a:hover{background:rgba(57,181,74,0.06)}
+  .main-nav a:hover{background:rgba(16,24,32,0.04)}
 .main-nav a.cta{background:var(--accent);color:#fff;padding:.6rem 1rem;border-radius:8px;box-shadow:0 8px 20px rgba(57,181,74,0.08)}
 
 .hero{padding:3rem 0;background:linear-gradient(180deg,#eaf4ff 0%, var(--bg) 60%)}
@@ -67,18 +78,18 @@ body{
   padding:.65rem 1.05rem;
   border-radius:10px;
   text-decoration:none;
-  box-shadow: 0 8px 20px rgba(57,181,74,0.12);
+  box-shadow: 0 8px 20px rgba(17,24,39,0.06);
   border: 0;
 }
-.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(57,181,74,0.16)}
-.btn-primary:focus{outline:3px solid rgba(57,181,74,0.12);outline-offset:3px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(17,24,39,0.12)}
+.btn-primary:focus{outline:3px solid var(--focus);outline-offset:3px}
 
 /* special accent for alternative CTAs */
 .cta-alt{background: linear-gradient(180deg,var(--accent-2), var(--accent)); color: #222}
 
 .services{padding:2rem 0}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
-.card{background:var(--card);padding:1rem;border-radius:var(--radius);box-shadow:0 8px 20px rgba(57,181,74,0.08);border-left:4px solid rgba(57,181,74,0.10)}
+.card{background:var(--card);padding:1rem;border-radius:var(--radius);box-shadow:0 8px 20px rgba(17,24,39,0.06);border-left:4px solid rgba(57,181,74,0.10)}
 
 .about,.testimonials{padding:1.5rem 0}
 .testimonials blockquote{margin:0;padding:.75rem 1rem;background:#fff;border-left:6px solid var(--accent);border-radius:8px}
@@ -138,10 +149,11 @@ a:hover{color:var(--accent)}
 }
 
 /* WhatsApp floating action button */
-.whatsapp-fab{position:fixed;right:16px;bottom:16px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#25D366;color:#fff;text-decoration:none;box-shadow:0 10px 24px rgba(37,211,102,0.18);z-index:1200}
+.whatsapp-fab{position:fixed;right:16px;bottom:16px;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text);text-decoration:none;box-shadow:0 10px 24px rgba(17,24,39,0.10);z-index:1200}
 .whatsapp-fab svg{width:44px;height:44px;border-radius:50%}
-.whatsapp-fab:focus{outline:3px solid rgba(57,181,74,0.16);outline-offset:3px}
-.whatsapp-fab:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(37,211,102,0.22)}
+.whatsapp-fab img.whatsapp-icon{width:44px;height:44px;border-radius:50%;display:block}
+.whatsapp-fab:focus{outline:3px solid var(--focus);outline-offset:3px}
+.whatsapp-fab:hover{transform:translateY(-4px);box-shadow:0 14px 36px rgba(17,24,39,0.12)}
 
 @media (min-width:900px){
   /* hide on very large screens if you prefer desktop not to show FAB — keep visible by removing this media rule */
@@ -174,11 +186,11 @@ a:hover{color:var(--accent)}
 .hero-inner{position:relative;z-index:2}
 .shapes-svg{width:100%;height:100%;display:block}
 .shape{fill:var(--accent);opacity:.12;transform-origin:center;transition:transform .4s ease}
-.shape-2{fill:var(--accent-600);opacity:.08}
+.shape-2{fill:var(--accent-comp-600);opacity:.08}
 .shape-3{fill:var(--accent);opacity:.16}
-.shape-4{fill:var(--accent-2);opacity:.22}
-.shape-5{fill:var(--accent);opacity:.14}
-.shape-6{fill:var(--accent-600);opacity:.06}
+.shape-4{fill:var(--accent-comp-2);opacity:.22}
+.shape-5{fill:var(--accent-2);opacity:.14}
+.shape-6{fill:var(--accent-comp-600);opacity:.06}
 
 /* subtle motion */
 .shape-1{animation:drift 9s ease-in-out infinite;transform-box:fill-box}
