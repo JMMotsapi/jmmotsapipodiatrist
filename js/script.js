@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
 
       // Build a mailto: URL to open the user's email client with a prefilled message
-      const to = 'letsieteboho7@gmail.com';
+      const to = 'martinusmotsapi@gmail.com';
       const subject = `Booking request from ${name}`;
       const bodyLines = [];
       bodyLines.push(`Name: ${name}`);
