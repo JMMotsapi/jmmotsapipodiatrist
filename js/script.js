@@ -99,6 +99,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Sample the header logo image and set CSS accent variables to match
   (function(){
+    // Sampling is opt-in: only run when <html data-sample-colors="true"> is set.
+    const shouldSample = document.documentElement.getAttribute('data-sample-colors') === 'true';
+    if(!shouldSample){
+      console.info('Color sampling disabled (data-sample-colors not set to true).');
+      return;
+    }
+
     const img = document.querySelector('.logo-img');
     if(!img) return;
 
