@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function(){
       feedback.textContent = '';
       const name = form.name.value.trim();
       const email = form.email.value.trim();
+      const phone = form.phone ? form.phone.value.trim() : '';
       const message = form.message.value.trim();
 
       if(!name || !email || !message){
@@ -26,33 +27,21 @@ document.addEventListener('DOMContentLoaded', function(){
         return;
       }
 
-      // Send directly to backend (FormSubmit service)
-      feedback.textContent = 'Sending your booking...';
-      
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      if(form.phone && form.phone.value.trim()) formData.append('phone', form.phone.value.trim());
-      formData.append('message', message);
-      formData.append('_subject', `New booking request from ${name}`);
-      formData.append('_captcha', 'false');
-      
-      fetch('https://formsubmit.co/Letsieteboho7@gmail.com', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => {
-        if(response.ok){
-          feedback.textContent = 'Thanks — your booking has been sent successfully!';
-          form.reset();
-        } else {
-          feedback.textContent = 'Error sending booking. Please try again.';
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        feedback.textContent = 'Error sending booking. Please try again.';
-      });
+      // Build a mailto: URL to open the user's email client with a prefilled message
+      const to = 'letsieteboho7@gmail.com';
+      const subject = `Booking request from ${name}`;
+      const bodyLines = [];
+      bodyLines.push(`Name: ${name}`);
+      bodyLines.push(`Email: ${email}`);
+      if(phone) bodyLines.push(`Phone: ${phone}`);
+      bodyLines.push('');
+      bodyLines.push(message);
+      const body = encodeURIComponent(bodyLines.join('\n'));
+      const mailto = `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+      feedback.textContent = 'Opening your email app...';
+      // Open the user's default mail client
+      window.location.href = mailto;
     });
   }
 
